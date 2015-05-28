@@ -303,7 +303,8 @@ NSString * const TMMemoryCachePrefix = @"com.tumblr.TMMemoryCache";
         return;
 
     __weak TMMemoryCache *weakSelf = self;
-
+    
+    //以barrier的方式能够设置任务点，保证任务的有序进行，运行-》barrier-》运行
     dispatch_barrier_async(_queue, ^{
         TMMemoryCache *strongSelf = weakSelf;
         if (!strongSelf)
