@@ -23,17 +23,29 @@
 didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [[UIApplication sharedApplication] setApplicationSupportsShakeToEdit:YES];
+    
+    //设置最大cost是MEMORY_CACHE_COST_LIMIT
     [[[TMCache sharedCache] memoryCache] setCostLimit:MEMORY_CACHE_COST_LIMIT];
+    
+    
     [MagicalRecord setupAutoMigratingCoreDataStack];
     [[AFNetworkActivityIndicatorManager sharedManager] setEnabled:YES];
+    
     NSURLCache *URLCache = [[NSURLCache alloc] initWithMemoryCapacity:4 * 1024 * 1024
                                                          diskCapacity:20 * 1024 * 1024
                                                              diskPath:nil];
     [NSURLCache setSharedURLCache:URLCache];
+    
+    
     [DDLog addLogger:[DDASLLogger sharedInstance]];
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
     return YES;
 }
+
+// TODO:123123123
+// FIXME:12312312312312
+// ???:TEST ???
+// !!!:TEST !!!
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
