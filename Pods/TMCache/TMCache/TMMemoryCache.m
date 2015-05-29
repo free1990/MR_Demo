@@ -63,10 +63,12 @@ NSString * const TMMemoryCachePrefix = @"com.tumblr.TMMemoryCache";
         _ageLimit = 0.0;
         _costLimit = 0;
         _totalCost = 0;
-
+        
+        //默认在受到内存警告和进入后台的时候都会清理掉内存的占用
         _removeAllObjectsOnMemoryWarning = YES;
         _removeAllObjectsOnEnteringBackground = YES;
-
+        
+        //设置在才程序受到内存警告以及进入后台的时候进行处理
         #if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_4_0
         for (NSString *name in @[UIApplicationDidReceiveMemoryWarningNotification, UIApplicationDidEnterBackgroundNotification]) {
             [[NSNotificationCenter defaultCenter] addObserver:self
@@ -458,7 +460,7 @@ NSString * const TMMemoryCachePrefix = @"com.tumblr.TMMemoryCache";
     });
 }
 
-#pragma mark - Public Synchronous Methods -
+#pragma mark - Public Synchronous Methods - dispatch_semaphore_t来控制串行
 
 - (id)objectForKey:(NSString *)key
 {
@@ -622,6 +624,8 @@ NSString * const TMMemoryCachePrefix = @"com.tumblr.TMMemoryCache";
 
     return block;
 }
+
+#pragma mark - 在方法中传递block赋值的时候记得使用赋值
 
 - (void)setWillAddObjectBlock:(TMMemoryCacheObjectBlock)block
 {

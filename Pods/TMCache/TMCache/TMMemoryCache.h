@@ -33,11 +33,13 @@ typedef void (^TMMemoryCacheObjectBlock)(TMMemoryCache *cache, NSString *key, id
 
 /**
  The total accumulated cost.
+ 内存中总的存储空间
  */
 @property (readonly) NSUInteger totalCost;
 
 /**
  The maximum cost allowed to accumulate before objects begin to be removed with <trimToCostByDate:>.
+ 开始删除存储的对象时候的 值
  */
 @property (assign) NSUInteger costLimit;
 
