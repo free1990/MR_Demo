@@ -4,6 +4,7 @@
                                     [[NSString stringWithUTF8String:__FILE__] lastPathComponent], \
                                     __LINE__, [error localizedDescription]); }
 
+//代码在进入后台时候的事件
 #if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_4_0
     #define TMCacheStartBackgroundTask() UIBackgroundTaskIdentifier taskID = UIBackgroundTaskInvalid; \
             taskID = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{ \
@@ -17,6 +18,7 @@
 NSString * const TMDiskCachePrefix = @"com.tumblr.TMDiskCache";
 NSString * const TMDiskCacheSharedName = @"TMDiskCacheShared";
 
+//在此处声明的变量的属性可以在程序的里卖弄使用，在.h文件中设置的属性，则必须是外面调用的时候的属性，比如byteCount的值，现在是可以读写的，而作为.h中是只读的
 @interface TMDiskCache ()
 @property (assign) NSUInteger byteCount;
 @property (strong, nonatomic) NSURL *cacheURL;
@@ -57,25 +59,31 @@ NSString * const TMDiskCacheSharedName = @"TMDiskCacheShared";
         _byteCount = 0;
         _byteLimit = 0;
         _ageLimit = 0.0;
-
+        
+        //设置存储的日期和尺寸
         _dates = [[NSMutableDictionary alloc] init];
         _sizes = [[NSMutableDictionary alloc] init];
-
+        
+        //设置缓存的路径
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
         NSString *pathComponent = [[NSString alloc] initWithFormat:@"%@.%@", TMDiskCachePrefix, _name];
         _cacheURL = [NSURL fileURLWithPathComponents:@[ [paths objectAtIndex:0], pathComponent ]];
-
+        
         __weak TMDiskCache *weakSelf = self;
-
+        
         dispatch_async(_queue, ^{
             TMDiskCache *strongSelf = weakSelf;
+            
+            //设置存储的路径
             [strongSelf createCacheDirectory];
+            //配置硬盘存储的属性
             [strongSelf initializeDiskProperties];
         });
     }
     return self;
 }
 
+//重载描述方法
 - (NSString *)description
 {
     return [[NSString alloc] initWithFormat:@"%@.%@.%p", TMDiskCachePrefix, _name, self];
@@ -87,6 +95,7 @@ NSString * const TMDiskCacheSharedName = @"TMDiskCacheShared";
     static dispatch_once_t predicate;
 
     dispatch_once(&predicate, ^{
+        //创建存储的对象
         cache = [[self alloc] initWithName:TMDiskCacheSharedName];
     });
 
@@ -101,7 +110,7 @@ NSString * const TMDiskCacheSharedName = @"TMDiskCacheShared";
     dispatch_once(&predicate, ^{
         queue = dispatch_queue_create([TMDiskCachePrefix UTF8String], DISPATCH_QUEUE_SERIAL);
     });
-
+    
     return queue;
 }
 
@@ -115,6 +124,7 @@ NSString * const TMDiskCacheSharedName = @"TMDiskCacheShared";
     return [_cacheURL URLByAppendingPathComponent:[self encodedString:key]];
 }
 
+//编码url变成NSString对象
 - (NSString *)keyForEncodedFileURL:(NSURL *)url
 {
     NSString *fileName = [url lastPathComponent];
@@ -129,6 +139,7 @@ NSString * const TMDiskCacheSharedName = @"TMDiskCacheShared";
     if (![string length])
         return @"";
 
+    //使用CF的方法去copy并替换一份，并且剔除掉里面的制定的字符
     CFStringRef static const charsToEscape = CFSTR(".:/");
     CFStringRef escapedString = CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
                                                                         (__bridge CFStringRef)string,
@@ -167,18 +178,22 @@ NSString * const TMDiskCacheSharedName = @"TMDiskCacheShared";
     return success;
 }
 
+//设置初始变量
 - (void)initializeDiskProperties
 {
     NSUInteger byteCount = 0;
+    //最近修改时间、总共文件的大小
     NSArray *keys = @[ NSURLContentModificationDateKey, NSURLTotalFileAllocatedSizeKey ];
 
+    //只要是一个资源就可以用NSURL去进行捕获
     NSError *error = nil;
     NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:_cacheURL
                                                    includingPropertiesForKeys:keys
                                                                       options:NSDirectoryEnumerationSkipsHiddenFiles
                                                                         error:&error];
     TMDiskCacheError(error);
-
+    
+    //把文件的原始属性都赋值给当前的类
     for (NSURL *fileURL in files) {
         NSString *key = [self keyForEncodedFileURL:fileURL];
 
@@ -201,6 +216,7 @@ NSString * const TMDiskCacheSharedName = @"TMDiskCacheShared";
         self.byteCount = byteCount; // atomic
 }
 
+//设置对象的修改时间
 - (BOOL)setFileModificationDate:(NSDate *)date forURL:(NSURL *)fileURL
 {
     NSError *error = nil;
@@ -208,13 +224,14 @@ NSString * const TMDiskCacheSharedName = @"TMDiskCacheShared";
                                                     ofItemAtPath:[fileURL path]
                                                            error:&error];
     TMDiskCacheError(error);
-
+    
     if (success)
         [_dates setObject:date forKey:[self keyForEncodedFileURL:fileURL]];
 
     return success;
 }
 
+//删除文件
 - (BOOL)removeFileAndExecuteBlocksForKey:(NSString *)key
 {
     NSURL *fileURL = [self encodedFileURLForKey:key];
@@ -244,13 +261,14 @@ NSString * const TMDiskCacheSharedName = @"TMDiskCacheShared";
     return YES;
 }
 
+//按照大小来进行过滤删除
 - (void)trimDiskToSize:(NSUInteger)trimByteCount
 {
     if (_byteCount <= trimByteCount)
         return;
-
+    
     NSArray *keysSortedBySize = [_sizes keysSortedByValueUsingSelector:@selector(compare:)];
-
+    
     for (NSString *key in [keysSortedBySize reverseObjectEnumerator]) { // largest objects first
         [self removeFileAndExecuteBlocksForKey:key];
 
@@ -259,6 +277,7 @@ NSString * const TMDiskCacheSharedName = @"TMDiskCacheShared";
     }
 }
 
+//原理同上
 - (void)trimDiskToSizeByDate:(NSUInteger)trimByteCount
 {
     if (_byteCount <= trimByteCount)
@@ -274,6 +293,7 @@ NSString * const TMDiskCacheSharedName = @"TMDiskCacheShared";
     }
 }
 
+//按照时间排序进行删除
 - (void)trimDiskToDate:(NSDate *)trimDate
 {
     NSArray *keysSortedByDate = [_dates keysSortedByValueUsingSelector:@selector(compare:)];
@@ -362,6 +382,7 @@ NSString * const TMDiskCacheSharedName = @"TMDiskCacheShared";
     });
 }
 
+//设置对象进行缓存
 - (void)setObject:(id <NSCoding>)object forKey:(NSString *)key block:(TMDiskCacheObjectBlock)block
 {
     NSDate *now = [[NSDate alloc] init];
@@ -384,7 +405,8 @@ NSString * const TMDiskCacheSharedName = @"TMDiskCacheShared";
 
         if (strongSelf->_willAddObjectBlock)
             strongSelf->_willAddObjectBlock(strongSelf, key, object, fileURL);
-
+        
+        //存储对象转成文件
         NSError *error = nil;
         BOOL written = [NSKeyedArchiver archiveRootObject:object toFile:[fileURL path]];
         TMDiskCacheError(error);
@@ -402,6 +424,7 @@ NSString * const TMDiskCacheSharedName = @"TMDiskCacheShared";
                 strongSelf.byteCount = strongSelf->_byteCount + [diskFileSize unsignedIntegerValue]; // atomic
             }
             
+            //如果设置的存储空间>0，而且存储的空间已经超过了限制的空间，那么这个时候根据时间排序进行删除，把以存储的空间减到限制空间的范围内
             if (strongSelf->_byteLimit > 0 && strongSelf->_byteCount > strongSelf->_byteLimit)
                 [strongSelf trimToSizeByDate:strongSelf->_byteLimit block:nil];
         } else {
@@ -418,13 +441,14 @@ NSString * const TMDiskCacheSharedName = @"TMDiskCacheShared";
     });
 }
 
+//根绝key值来删除对象
 - (void)removeObjectForKey:(NSString *)key block:(TMDiskCacheObjectBlock)block
 {
     if (!key)
         return;
 
     TMCacheStartBackgroundTask();
-
+        
     __weak TMDiskCache *weakSelf = self;
 
     dispatch_async(_queue, ^{
@@ -461,7 +485,7 @@ NSString * const TMDiskCacheSharedName = @"TMDiskCacheShared";
             TMCacheEndBackgroundTask();
             return;
         }
-
+        
         [strongSelf trimDiskToSize:trimByteCount];
 
         if (block)
@@ -760,7 +784,7 @@ NSString * const TMDiskCacheSharedName = @"TMDiskCacheShared";
     }];
 
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-
+    
     #if !OS_OBJECT_USE_OBJC
     dispatch_release(semaphore);
     #endif
@@ -964,5 +988,7 @@ NSString * const TMDiskCacheSharedName = @"TMDiskCacheShared";
         [strongSelf trimToAgeLimitRecursively];
     });
 }
+
+
 
 @end

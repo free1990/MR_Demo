@@ -36,18 +36,21 @@ typedef void (^TMDiskCacheObjectBlock)(TMDiskCache *cache, NSString *key, id <NS
 /**
  The name of this cache, used to create a directory under Library/Caches and also appearing in stack traces.
  */
-@property (readonly) NSString *name;
+
+@property (readonly) NSString *name;//TMDiskCache 的name
 
 /**
  The URL of the directory used by this cache, usually `Library/Caches/com.tumblr.TMDiskCache.(name)`
- 
  @warning Do not interact with files under this URL except on the <sharedQueue>.
  */
-@property (readonly) NSURL *cacheURL;
+@property (readonly) NSURL *cacheURL;//缓存的地址
 
 /**
  The total number of bytes used on disk, as reported by `NSURLTotalFileAllocatedSizeKey`.
+ //类似于NSURLTotalFileAllocatedSizeKey来报告大小
  
+ //这个属性虽然在技术上市线程安全的，但是它只能代表当前的disk上的的大小，并不能代表其余等待的队列中的大小。在大多数的情况下
+ //都是在<sharedQueue>队列中去访问，这样能够保证这个数据的精度，以便于在后面的过程中安全去使用这个值
  @warning This property is technically safe to access from any thread, but it reflects the value *right now*,
  not taking into account any pending operations. In most cases this value should only be read from a block on the
  <sharedQueue>, which will ensure its accuracy and prevent it from changing during the lifetime of the block.
@@ -55,7 +58,7 @@ typedef void (^TMDiskCacheObjectBlock)(TMDiskCache *cache, NSString *key, id <NS
  For example:
  
     // some background thread, not a block already running on the shared queue
-
+    // 例子
     dispatch_sync([TMDiskCache sharedQueue], ^{
         NSLog(@"accurate, unchanging byte count: %d", [[TMDiskCache sharedCache] byteCount]);
     });
@@ -66,6 +69,7 @@ typedef void (^TMDiskCacheObjectBlock)(TMDiskCache *cache, NSString *key, id <NS
  The maximum number of bytes allowed on disk. This value is checked every time an object is set, if the written
  size exceeds the limit a trim call is queued. Defaults to `0.0`, meaning no practical limit.
  
+ //磁盘上允许存放的空间
  @warning Do not read this property on the <sharedQueue> (including asynchronous method blocks).
  */
 @property (assign) NSUInteger byteLimit;
@@ -75,6 +79,7 @@ typedef void (^TMDiskCacheObjectBlock)(TMDiskCache *cache, NSString *key, id <NS
  greater than `0.0` will start a recurring GCD timer with the same period that calls <trimToDate:>.
  Setting it back to `0.0` will stop the timer. Defaults to `0.0`, meaning no limit.
  
+ // 存活时间（使用的GCD的Timer来进行计时）
  @warning Do not read this property on the <sharedQueue> (including asynchronous method blocks).
  */
 @property (assign) NSTimeInterval ageLimit;
@@ -93,10 +98,9 @@ typedef void (^TMDiskCacheObjectBlock)(TMDiskCache *cache, NSString *key, id <NS
 @property (copy) TMDiskCacheObjectBlock willRemoveObjectBlock;
 
 /**
- A block to be executed just before all objects are removed from the cache as a result of <removeAllObjects:>.
- The queue waits during execution.
+ A block to be executed just after an object is removed from the cache. The queue waits during execution.
  */
-@property (copy) TMDiskCacheBlock willRemoveAllObjectsBlock;
+@property (copy) TMDiskCacheObjectBlock didRemoveObjectBlock;
 
 /**
  A block to be executed just after an object is added to the cache. The queue waits during execution.
@@ -104,15 +108,16 @@ typedef void (^TMDiskCacheObjectBlock)(TMDiskCache *cache, NSString *key, id <NS
 @property (copy) TMDiskCacheObjectBlock didAddObjectBlock;
 
 /**
- A block to be executed just after an object is removed from the cache. The queue waits during execution.
- */
-@property (copy) TMDiskCacheObjectBlock didRemoveObjectBlock;
-
-/**
  A block to be executed just after all objects are removed from the cache as a result of <removeAllObjects:>.
  The queue waits during execution.
  */
 @property (copy) TMDiskCacheBlock didRemoveAllObjectsBlock;
+
+/**
+ A block to be executed just before all objects are removed from the cache as a result of <removeAllObjects:>.
+ The queue waits during execution.
+ */
+@property (copy) TMDiskCacheBlock willRemoveAllObjectsBlock;
 
 #pragma mark -
 /// @name Initialization
@@ -143,7 +148,7 @@ typedef void (^TMDiskCacheObjectBlock)(TMDiskCache *cache, NSString *key, id <NS
 - (instancetype)initWithName:(NSString *)name;
 
 #pragma mark -
-/// @name Asynchronous Methods
+/// @name Asynchronous Methods（异步方法）
 
 /**
  Retrieves the object for the specified key. This method returns immediately and executes the passed
@@ -198,6 +203,7 @@ typedef void (^TMDiskCacheObjectBlock)(TMDiskCache *cache, NSString *key, id <NS
 - (void)trimToDate:(NSDate *)date block:(TMDiskCacheBlock)block;
 
 /**
+ 删除比某个size大的对象，删除的时候顺序为从大到小
  Removes objects from the cache, largest first, until the cache is equal to or smaller than the specified byteCount.
  This method returns immediately and executes the passed block as soon as the cache has been trimmed.
  
@@ -235,7 +241,7 @@ typedef void (^TMDiskCacheObjectBlock)(TMDiskCache *cache, NSString *key, id <NS
 - (void)enumerateObjectsWithBlock:(TMDiskCacheObjectBlock)block completionBlock:(TMDiskCacheBlock)completionBlock;
 
 #pragma mark -
-/// @name Synchronous Methods
+/// @name Synchronous Methods（串行的方法）
 
 /**
  Retrieves the object for the specified key. This method blocks the calling thread until the
@@ -279,7 +285,8 @@ typedef void (^TMDiskCacheObjectBlock)(TMDiskCache *cache, NSString *key, id <NS
 /**
  Removes all objects from the cache that have not been used since the specified date.
  This method blocks the calling thread until the cache has been trimmed.
-
+ 
+ 删除指定日期之前使用过的对象
  @param date Objects that haven't been accessed since this date are removed from the cache.
  */
 - (void)trimToDate:(NSDate *)date;
@@ -288,6 +295,7 @@ typedef void (^TMDiskCacheObjectBlock)(TMDiskCache *cache, NSString *key, id <NS
  Removes objects from the cache, largest first, until the cache is equal to or smaller than the
  specified byteCount. This method blocks the calling thread until the cache has been trimmed.
  
+ 删除大小超过指定大小的对象，删除的顺序为从大到小
  @param byteCount The cache will be trimmed equal to or smaller than this size.
  */
 - (void)trimToSize:(NSUInteger)byteCount;
@@ -296,6 +304,7 @@ typedef void (^TMDiskCacheObjectBlock)(TMDiskCache *cache, NSString *key, id <NS
  Removes objects from the cache, ordered by date (least recently used first), until the cache is equal to or
  smaller than the specified byteCount. This method blocks the calling thread until the cache has been trimmed.
 
+ 按照时间的顺序来删除超出指定大小的对象
  @param byteCount The cache will be trimmed equal to or smaller than this size.
  */
 - (void)trimToSizeByDate:(NSUInteger)byteCount;
