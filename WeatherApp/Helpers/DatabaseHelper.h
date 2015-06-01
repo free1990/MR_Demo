@@ -21,6 +21,7 @@
 
 - (CountryManagedObject *)getCountryManagedObjectWithCountryCode:(NSString *)countryCode
                                                        inContext:(NSManagedObjectContext *)context;
+
 - (CityManagedObject *)getCityManagedObjectWithName:(NSString *)name
                                           inContext:(NSManagedObjectContext *)context;
 

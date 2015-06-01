@@ -11,6 +11,7 @@
 
 @protocol CountriesFetcher <NSObject>
 
+//获得国家的协议方法
 - (void)getCountriesWithCompletion:(ArrayCompletionBlock)completion;
 
 @end

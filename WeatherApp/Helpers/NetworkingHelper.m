@@ -50,13 +50,16 @@
 
 #pragma mark - Private Methods
 
+//模仿AF生成自己的AFHTTPRequestOperation
 + (AFHTTPRequestOperation *)createHTTPRequestOperationWithConfiguration:(RequestOperationConfigBlock)configuration
 {
     NSParameterAssert(configuration != nil);
+    
     RequestOperationConfig* requestOperationConfig = [[RequestOperationConfig alloc] init];
     if (configuration) {
         configuration(requestOperationConfig);
     }
+    
     NSURLRequest *request = [NSURLRequest requestWithURL:[requestOperationConfig URL]];
     AFHTTPRequestOperation *requestOperation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     requestOperation.responseSerializer = requestOperationConfig.responseSerializer;

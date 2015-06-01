@@ -23,6 +23,7 @@ int const MEMORY_CACHE_STATIONS_COST = 20;
 
 static const int ddLogLevel = LOG_LEVEL_INFO;
 
+#pragma mark - 通过自己定义独特的键值以及可以通过设置cost来控制本地存储的变量的更新
 @interface CacheHelper ()
 
 - (void)getObjectForKey:(NSString *)key
@@ -86,7 +87,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 }
 
 #pragma mark - CountriesFetcher Protocol
-
 - (void)getCountriesWithCompletion:(ArrayCompletionBlock)completion
 {
     [self getObjectForKey:MEMORY_CACHE_COUNTRIES_KEY
@@ -102,7 +102,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 }
 
 #pragma mark - CountriesStorage Protocol
-
 - (void)storeCountries:(NSArray *)countries
 {
     [self storeObject:countries

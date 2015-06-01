@@ -17,7 +17,7 @@
 #import "CityManagedObject+Fixes.h"
 #import "NSManagedObjectContext+BackgroundFetch.h"
 
-static const int ddLogLevel = LOG_LEVEL_INFO;
+static const int ddLogLevel = LOG_LEVEL_DEBUG;
 
 @interface DatabaseHelper ()
 
@@ -27,7 +27,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
                                   withSortDescriptorKey:(NSString *)sortDescriptorKey
                                               ascending:(BOOL)ascending
                                            andPredicate:(NSPredicate *)predicate;
-
 @end
 
 @implementation DatabaseHelper
@@ -58,8 +57,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
                                              inContext:(NSManagedObjectContext *)context
 {
     return [CityManagedObject MR_findFirstByAttribute:@"name"
-                                               withValue:name
-                                               inContext:context];
+                                            withValue:name
+                                            inContext:context];
 }
 
 #pragma mark - Private Methods
@@ -69,7 +68,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
                                               ascending:(BOOL)ascending
                                            andPredicate:(NSPredicate *)predicate
 {
-    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:entityName];
+    NSFetchRequest *fetchRequest        = [NSFetchRequest fetchRequestWithEntityName:entityName];
     fetchRequest.includesPropertyValues = NO;
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:sortDescriptorKey
                                                                    ascending:ascending];

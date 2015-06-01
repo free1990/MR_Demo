@@ -13,6 +13,7 @@
 
 @protocol CitiesFetcher <NSObject>
 
+//获取指定的国家的城市
 - (void)getCitiesWithCountry:(Country *)country
                   completion:(ArrayCompletionBlock)completion;
 

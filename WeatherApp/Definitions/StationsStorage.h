@@ -12,6 +12,7 @@
 
 @protocol StationsStorage <NSObject>
 
+//把城市的地区存储下来
 - (void)storeStations:(NSArray *)stations
              fromCity:(City *)city;
 

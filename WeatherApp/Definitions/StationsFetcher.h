@@ -13,6 +13,7 @@
 
 @protocol StationsFetcher <NSObject>
 
+//获取城市的地区
 - (void)getStationsWithCity:(City *)city
                   completion:(ArrayCompletionBlock)completion;
 

@@ -10,8 +10,10 @@
 
 @implementation CountryManagedObject (Fixes)
 
+//添加城市的信息
 - (void)addCitiesObject:(CityManagedObject *)value
 {
+    //ManagedObject其实是kvo的，依赖运行时的时候生成一个新的对象
     [self willChangeValueForKey:@"cities"];
     NSMutableOrderedSet *tempSet = [NSMutableOrderedSet orderedSetWithOrderedSet:self.cities];
     [tempSet addObject: value];

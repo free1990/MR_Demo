@@ -335,12 +335,12 @@
 			children = (
 				3FE685191885B9B600AEA2CD /* NetworkingHelper.h */,
 				3FE6851A1885B9B600AEA2CD /* NetworkingHelper.m */,
-				3FDA2BD91886AC67001790F8 /* TranslatorHelper.h */,
-				3FDA2BDA1886AC67001790F8 /* TranslatorHelper.m */,
 				3FDA2BE21886C074001790F8 /* CacheHelper.h */,
 				3FDA2BE31886C074001790F8 /* CacheHelper.m */,
 				3FDA2BEF1886E301001790F8 /* DatabaseHelper.h */,
 				3FDA2BF01886E301001790F8 /* DatabaseHelper.m */,
+				3FDA2BD91886AC67001790F8 /* TranslatorHelper.h */,
+				3FDA2BDA1886AC67001790F8 /* TranslatorHelper.m */,
 				3F92E01A188FFF4D003B8236 /* ConfigurationHelper.h */,
 				3F92E01B188FFF4D003B8236 /* ConfigurationHelper.m */,
 			);

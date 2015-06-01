@@ -12,6 +12,7 @@
 
 @protocol CitiesStorage <NSObject>
 
+//把一个国家里面的城市存储下来
 - (void)storeCities:(NSArray *)cities
         fromCountry:(Country *)country;
 

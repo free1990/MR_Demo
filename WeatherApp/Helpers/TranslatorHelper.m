@@ -16,6 +16,8 @@
 {
     NSParameterAssert(className != nil);
     NSError *error = nil;
+    
+    //利用Mantle把JSON转成class
     id model = [MTLJSONAdapter modelOfClass:NSClassFromString(className)
                          fromJSONDictionary:JSON
                                       error:&error];
@@ -26,6 +28,8 @@
     }
 }
 
+
+//数组类型的JSON转包含自己类型的数组
 - (id)translateCollectionFromJSON:(NSDictionary *)JSON
                     withClassName:(NSString *)className
 {
@@ -38,6 +42,7 @@
     return nil;
 }
 
+//???:不知道咋么玩
 - (id)translateModelfromManagedObject:(NSManagedObject *)managedObject
                         withClassName:(NSString *)className
 {
@@ -53,6 +58,7 @@
     }
 }
 
+//managedObjects都转换成对应的数组
 - (id)translateCollectionfromManagedObjects:(NSArray *)managedObjects
                               withClassName:(NSString *)className
 {
