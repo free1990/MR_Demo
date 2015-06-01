@@ -94,6 +94,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 - (void)loadCountries
 {
+    //以纳秒的精度来计算拉取国家的时间
     uint64_t startTime = mach_absolute_time();
     [[WeatherAppManager sharedManager] getCountriesWithCompletion:^(NSArray *array, NSError *error) {
         uint64_t endTime = mach_absolute_time();
@@ -107,10 +108,15 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         });
         double elapsedTimeInNanoseconds = elapsedTime * ticksToNanoseconds;
         DDLogInfo(@"Execution time: %f [ms]", elapsedTimeInNanoseconds/1E6);
+        //换算成ms
+        
         if (!error) {
             if (array) {
+                //获取国家的信息
                 [self.countries removeAllObjects];
                 [self.countries addObjectsFromArray:array];
+                
+                //在后台获取各个国家的城市的信息
                 [[WeatherAppManager sharedManager] startBackgroundCitiesFetchingWithCountries:array];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.tableView reloadData];
@@ -176,7 +182,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 - (void)testDataSource
 {
-    DDLogInfo(@"Country count: %d", [_countries count]);
+    DDLogInfo(@"Country count: %ld", [_countries count]);
     for (Country *country in _countries) {
         CountryManagedObject *countryManagedObject = [[self databaseHelper] getCountryManagedObjectWithCountryCode:
                                                       country.countryCode
@@ -186,14 +192,14 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
                           [NSPredicate predicateWithFormat:@"country == %@", countryManagedObject]
                                                           inContext:
                           [NSManagedObjectContext MR_contextForCurrentThread]];
-        DDLogInfo(@"City count for %@: %d", country.countryName, [array count]);
+        DDLogInfo(@"City count for %@: %ld", country.countryName, [array count]);
         for (City *city in array) {
             CityManagedObject *cityManagedObject = [[self databaseHelper] getCityManagedObjectWithName:city.name
                                                                                              inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
             NSArray *stations = [StationManagedObject MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"city == %@", cityManagedObject]
                                                                     inContext:
                                  [NSManagedObjectContext MR_contextForCurrentThread]];
-            DDLogInfo(@"Station count for %@: %d", city.name, [stations count]);
+            DDLogInfo(@"Station count for %@: %ld", city.name, [stations count]);
         }
     }
 }

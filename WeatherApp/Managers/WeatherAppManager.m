@@ -17,6 +17,8 @@
 #import "Country.h"
 #import "City.h"
 
+
+//提供了数据获取的接口
 @interface WeatherAppManager ()
 
 @property (nonatomic, strong) NetworkingHelper *networkingHelper;
@@ -142,7 +144,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     CitiesOperation *operation = [dictionary objectForKey:@"operation"];
     NSArray *cities = [dictionary objectForKey:@"cities"];
     [[self currentCitiesOperations] removeObject:operation.country.countryCode];
-    DDLogInfo(@"Remaining cities operations: %d", [[self currentCitiesOperations] count]);
+    DDLogInfo(@"Remaining cities operations: %ld", [[self currentCitiesOperations] count]);
     [self startBackgroundStationFetchingWithCities:cities];
 }
 
@@ -151,14 +153,18 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 - (void)stationsOperationDidFinish:(StationOperation *)operation
 {
     [[self currentStationsOperations] removeObject:operation.city.name];
-    DDLogInfo(@"Remaining stations operations: %d", [[self currentStationsOperations] count]);
+    DDLogInfo(@"Remaining stations operations: %ld", [[self currentStationsOperations] count]);
 }
 
 #pragma mark - CountriesStorage Protocol
 
 - (void)getCountriesWithCompletion:(ArrayCompletionBlock)completion
 {
+    
+    //先到缓存中去寻找数据
     [[self cacheHelper] getCountriesWithCompletion:^(NSArray *array, NSError *error) {
+        
+        
         if (array) {
             DDLogInfo(@"Contries retrieved from memory");
             completion(array, nil);
@@ -188,6 +194,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
                 }
             }];
         }
+        
+        
+        
     }];
 }
 

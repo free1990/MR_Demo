@@ -36,7 +36,6 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
                                                              diskPath:nil];
     [NSURLCache setSharedURLCache:URLCache];
     
-    
     [DDLog addLogger:[DDASLLogger sharedInstance]];
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
     

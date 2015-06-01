@@ -66,6 +66,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 - (void)loadCities
 {
+    //mac系统纳秒级时间统计
     uint64_t startTime = mach_absolute_time();
     [[WeatherAppManager sharedManager] getCitiesWithCountry:_country
                                                  completion:^(NSArray *array, NSError *error) {
@@ -80,6 +81,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
                                                      });
                                                      double elapsedTimeInNanoseconds = elapsedTime * ticksToNanoseconds;
                                                      DDLogInfo(@"Execution time: %f [ms]", elapsedTimeInNanoseconds/1E6);
+                                                     
+                                                     //主线程刷新界面
                                                      if (!error) {
                                                          if (array) {
                                                              [self.cities removeAllObjects];

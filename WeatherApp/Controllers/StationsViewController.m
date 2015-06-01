@@ -61,6 +61,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 - (void)loadStations
 {
+    //同样的原理
     uint64_t startTime = mach_absolute_time();
     [[WeatherAppManager sharedManager] getStationsWithCity:_city
                                                 completion:^(NSArray *array, NSError *error) {

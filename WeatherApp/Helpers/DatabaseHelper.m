@@ -84,10 +84,12 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 - (void)getCountriesWithCompletion:(ArrayCompletionBlock)completion
 {
+    //生成NSFetchRequest
     NSFetchRequest *fetchRequest = [self backgroundFetchRequestForEntityName:@"CountryManagedObject"
                                                        withSortDescriptorKey:@"countryName"
                                                                    ascending:YES
                                                                 andPredicate:nil];
+    
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
     [context executeFetchRequest:fetchRequest
                       completion:^(NSArray *array, NSError *error) {
