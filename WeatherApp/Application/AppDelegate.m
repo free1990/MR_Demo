@@ -39,6 +39,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
     
     [DDLog addLogger:[DDASLLogger sharedInstance]];
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
+    
     return YES;
 }
 
