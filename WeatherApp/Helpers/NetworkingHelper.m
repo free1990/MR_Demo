@@ -59,7 +59,7 @@
     if (configuration) {
         configuration(requestOperationConfig);
     }
-    
+    NSLog(@"url = %@", [requestOperationConfig URL]);
     NSURLRequest *request = [NSURLRequest requestWithURL:[requestOperationConfig URL]];
     AFHTTPRequestOperation *requestOperation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     requestOperation.responseSerializer = requestOperationConfig.responseSerializer;

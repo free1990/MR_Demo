@@ -27,6 +27,7 @@
             };
 }
 
+
 + (NSString *)managedObjectEntityName
 {
     return @"CountryManagedObject";
