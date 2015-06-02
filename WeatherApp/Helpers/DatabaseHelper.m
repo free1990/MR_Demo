@@ -70,8 +70,7 @@ static const int ddLogLevel = LOG_LEVEL_DEBUG;
 {
     NSFetchRequest *fetchRequest        = [NSFetchRequest fetchRequestWithEntityName:entityName];
     fetchRequest.includesPropertyValues = NO;
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:sortDescriptorKey
-                                                                   ascending:ascending];
+    NSSortDescriptor *sortDescriptor    = [[NSSortDescriptor alloc] initWithKey:sortDescriptorKey ascending:ascending];
     [fetchRequest setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
     if (predicate) {
         [fetchRequest setPredicate:predicate];
