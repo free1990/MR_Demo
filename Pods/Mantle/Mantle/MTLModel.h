@@ -15,12 +15,13 @@
 // the +propertyKeys method.
 @interface MTLModel : NSObject <NSCopying>
 
+//返回MTLModel的实例
 // Returns a new instance of the receiver initialized using
 // -initWithDictionary:error:.
 + (instancetype)modelWithDictionary:(NSDictionary *)dictionaryValue error:(NSError **)error;
 
-// Initializes the receiver with default values.
 //
+// Initializes the receiver with default values.
 // This is the designated initializer for this class.
 - (instancetype)init;
 

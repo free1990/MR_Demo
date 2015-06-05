@@ -25,13 +25,13 @@ static NSString * const MTLJSONAdapterThrownExceptionErrorKey = @"MTLJSONAdapter
 // completed.
 @property (nonatomic, strong, readonly) Class modelClass;
 
+// JSONKeyPathsByPropertyKey的字典的的备份，存储了数据属性的格式
 // A cached copy of the return value of +JSONKeyPathsByPropertyKey.
 @property (nonatomic, copy, readonly) NSDictionary *JSONKeyPathsByPropertyKey;
 
+// 这个是实例方法不是类方法
 // Looks up the NSValueTransformer that should be used for the given key.
-//
 // key - The property key to transform from or to. This argument must not be nil.
-//
 // Returns a transformer to use, or nil to not transform the property.
 - (NSValueTransformer *)JSONTransformerForKey:(NSString *)key;
 
@@ -50,7 +50,9 @@ static NSString * const MTLJSONAdapterThrownExceptionErrorKey = @"MTLJSONAdapter
 #pragma mark Convenience methods
 
 + (id)modelOfClass:(Class)modelClass fromJSONDictionary:(NSDictionary *)JSONDictionary error:(NSError **)error {
-	MTLJSONAdapter *adapter = [[self alloc] initWithJSONDictionary:JSONDictionary modelClass:modelClass error:error];
+	
+    //JSONDictionary是一个json的字典实例，modelClass为这个对应json的类
+    MTLJSONAdapter *adapter = [[self alloc] initWithJSONDictionary:JSONDictionary modelClass:modelClass error:error];
 	return adapter.model;
 }
 
@@ -67,13 +69,17 @@ static NSString * const MTLJSONAdapterThrownExceptionErrorKey = @"MTLJSONAdapter
 }
 
 - (id)initWithJSONDictionary:(NSDictionary *)JSONDictionary modelClass:(Class)modelClass error:(NSError **)error {
-	NSParameterAssert(modelClass != nil);
+	
+    //很好的习惯，重要的形参进行入参判断
+    NSParameterAssert(modelClass != nil);
 	NSParameterAssert([modelClass isSubclassOfClass:MTLModel.class]);
 	NSParameterAssert([modelClass conformsToProtocol:@protocol(MTLJSONSerializing)]);
 
 	if (JSONDictionary == nil) return nil;
-
+    
+    NSLog(@"modelClass = %@",  modelClass);
 	if ([modelClass respondsToSelector:@selector(classForParsingJSONDictionary:)]) {
+        
 		modelClass = [modelClass classForParsingJSONDictionary:JSONDictionary];
 		if (modelClass == nil) {
 			if (error != NULL) {
@@ -95,11 +101,19 @@ static NSString * const MTLJSONAdapterThrownExceptionErrorKey = @"MTLJSONAdapter
 	self = [super init];
 	if (self == nil) return nil;
 
+    //类的名字
 	_modelClass = modelClass;
+    NSLog(@"_modelClass = %@", [_modelClass class]);
+    
+    //属性的字典
 	_JSONKeyPathsByPropertyKey = [[modelClass JSONKeyPathsByPropertyKey] copy];
+    
+    NSLog(@"_JSONKeyPathsByPropertyKey = %@", _JSONKeyPathsByPropertyKey);
 
 	NSMutableDictionary *dictionaryValue = [[NSMutableDictionary alloc] initWithCapacity:JSONDictionary.count];
-
+    
+    //获取原始值的字典
+    //???:实现方法需要继续研究
 	for (NSString *propertyKey in [self.modelClass propertyKeys]) {
 		NSString *JSONKeyPath = [self JSONKeyPathForKey:propertyKey];
 		if (JSONKeyPath == nil) continue;
@@ -140,6 +154,7 @@ static NSString * const MTLJSONAdapterThrownExceptionErrorKey = @"MTLJSONAdapter
 	}
 
 	_model = [self.modelClass modelWithDictionary:dictionaryValue error:error];
+    
 	if (_model == nil) return nil;
 
 	return self;

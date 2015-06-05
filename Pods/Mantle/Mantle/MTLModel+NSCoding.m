@@ -28,7 +28,7 @@ static BOOL coderRequiresSecureCoding(NSCoder *coder) {
 
 	BOOL (*requiresSecureCodingIMP)(NSCoder *, SEL) = (__typeof__(requiresSecureCodingIMP))[coder methodForSelector:requiresSecureCodingSelector];
 	if (requiresSecureCodingIMP == NULL) return NO;
-
+    
 	return requiresSecureCodingIMP(coder, requiresSecureCodingSelector);
 }
 

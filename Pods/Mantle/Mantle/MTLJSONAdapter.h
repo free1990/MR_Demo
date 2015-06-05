@@ -25,6 +25,11 @@
 //
 // Returns a dictionary mapping property keys to JSON key paths (as strings) or
 // NSNull values.
+
+
+//这个方法里面设置匹配的属性的键值对应
+//如果存在子类，那么子类需要把父类的属性一起都组合起来
+//如果key值没有在字典里面找到，那么就会对应成NSNull的值
 + (NSDictionary *)JSONKeyPathsByPropertyKey;
 
 @optional
@@ -37,12 +42,16 @@
 // will use the result of that method instead.
 //
 // Returns a value transformer, or nil if no transformation should be performed.
+
+// 返回key指定值的的数据，如果transformer存在数据可逆，那么还可以属性的值转换成JSON
+// 如果接受者实现了+<key>JSONTransformer的方法，MTLJSONAdapter会使用这个方法来代替JSONTransformerForKey
+// 获得transformer，这个数据如果是空，俺么就会是一个nil
 + (NSValueTransformer *)JSONTransformerForKey:(NSString *)key;
 
 // Overridden to parse the receiver as a different class, based on information
 // in the provided dictionary.
 //
-// This is mostly useful for class clusters, where the abstract base class would
+// This is mostly useful for class clusters族, where the abstract base class would
 // be passed into -[MTLJSONAdapter initWithJSONDictionary:modelClass:], but
 // a subclass should be instantiated instead.
 //

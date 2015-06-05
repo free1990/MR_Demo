@@ -35,8 +35,11 @@ static void *MTLModelCachedPropertyKeysKey = &MTLModelCachedPropertyKeysKey;
 //
 // Returns YES if `value` could be validated and set, or NO if an error
 // occurred.
+
+//用来给MTLModel的类通过KVC来添加属性
 static BOOL MTLValidateAndSetValue(id obj, NSString *key, id value, BOOL forceUpdate, NSError **error) {
-	// Mark this as being autoreleased, because validateValue may return
+	
+    // Mark this as being autoreleased, because validateValue may return
 	// a new object to be stored in this variable (and we don't want ARC to
 	// double-free or leak the old or new values).
 	__autoreleasing id validatedValue = value;
@@ -94,13 +97,17 @@ static BOOL MTLValidateAndSetValue(id obj, NSString *key, id value, BOOL forceUp
 	if (self == nil) return nil;
 
 	for (NSString *key in dictionary) {
+        
 		// Mark this as being autoreleased, because validateValue may return
 		// a new object to be stored in this variable (and we don't want ARC to
 		// double-free or leak the old or new values).
 		__autoreleasing id value = [dictionary objectForKey:key];
 	
 		if ([value isEqual:NSNull.null]) value = nil;
-
+        
+         NSLog(@"绑定属性 = key = %@ , value = %@", key, value);
+        
+        //绑定属性
 		BOOL success = MTLValidateAndSetValue(self, key, value, YES, error);
 		if (!success) return nil;
 	}
@@ -113,14 +120,16 @@ static BOOL MTLValidateAndSetValue(id obj, NSString *key, id value, BOOL forceUp
 + (void)enumeratePropertiesUsingBlock:(void (^)(objc_property_t property, BOOL *stop))block {
 	Class cls = self;
 	BOOL stop = NO;
-
+    
+    //返回本类的Property属性
 	while (!stop && ![cls isEqual:MTLModel.class]) {
 		unsigned count = 0;
 		objc_property_t *properties = class_copyPropertyList(cls, &count);
 
 		cls = cls.superclass;
 		if (properties == NULL) continue;
-
+        
+        //???:@onExit
 		@onExit {
 			free(properties);
 		};
@@ -132,15 +141,23 @@ static BOOL MTLValidateAndSetValue(id obj, NSString *key, id value, BOOL forceUp
 	}
 }
 
+// 或许类的属性的集合
 + (NSSet *)propertyKeys {
+    
+    //获得联合绑定的对象，如果对象的值已经存在那么就直接使用，如果为空，在使用Runtime来获取
 	NSSet *cachedKeys = objc_getAssociatedObject(self, MTLModelCachedPropertyKeysKey);
 	if (cachedKeys != nil) return cachedKeys;
 
 	NSMutableSet *keys = [NSMutableSet set];
-
+    
+    //获取属性的key值
 	[self enumeratePropertiesUsingBlock:^(objc_property_t property, BOOL *stop) {
+        
+        //自定义获取属性的方法(自定的结构体，包含了成员变量的属性信息Runtime)
 		mtl_propertyAttributes *attributes = mtl_copyPropertyAttributes(property);
-		@onExit {
+		
+        //???:@onExit用法
+        @onExit {
 			free(attributes);
 		};
 
@@ -149,7 +166,7 @@ static BOOL MTLValidateAndSetValue(id obj, NSString *key, id value, BOOL forceUp
 		NSString *key = @(property_getName(property));
 		[keys addObject:key];
 	}];
-
+    
 	// It doesn't really matter if we replace another thread's work, since we do
 	// it atomically and the result should be the same.
 	objc_setAssociatedObject(self, MTLModelCachedPropertyKeysKey, keys, OBJC_ASSOCIATION_COPY);

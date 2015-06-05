@@ -78,6 +78,7 @@ NSString * const TMCacheSharedName = @"TMCacheShared";
     //异步提交到队列
     dispatch_async(_queue, ^{
         
+        //在block的传递过程中都是现在外面week然后再再内部进行strong之后进行曲传递
         TMCache *strongSelf = weakSelf;
         if (!strongSelf)
             return;

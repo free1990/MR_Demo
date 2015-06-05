@@ -45,7 +45,7 @@ typedef enum : NSUInteger {
 // The values of this dictionary should be boxed MTLModelEncodingBehavior
 // values.
 //
-// Any keys not present in the dictionary will be excluded from the archive.
+// Any keys not present in the dictionary will be excluded（排除） from the archive.
 //
 // Subclasses overriding this method should combine their values with those of
 // `super`.
@@ -54,6 +54,8 @@ typedef enum : NSUInteger {
 // behaviors. If a property is an object with `weak` semantics, the default
 // behavior is MTLModelEncodingBehaviorConditional; otherwise, the default is
 // MTLModelEncodingBehaviorUnconditional.
+
+// code的的key（需要序列化的key的集合）
 + (NSDictionary *)encodingBehaviorsByPropertyKey;
 
 // Determines the classes that are allowed to be decoded for each of the
@@ -73,9 +75,11 @@ typedef enum : NSUInteger {
 // cannot be determined (e.g., it is declared as `id`), it will be omitted from
 // the dictionary, and subclasses must provide a valid value to prevent an
 // exception being thrown during encoding/decoding.
+
+// 使用NSSecureCoding来进行序列化的
 + (NSDictionary *)allowedSecureCodingClassesByPropertyKey;
 
-// Decodes the value of the given property key from an archive.
+// Decodes（解码） the value of the given property key from an archive.
 //
 // By default, this method looks for a `-decode<Key>WithCoder:modelVersion:`
 // method on the receiver, and invokes it if found.
@@ -96,6 +100,7 @@ typedef enum : NSUInteger {
 // modelVersion - The version of the original model object that was encoded.
 //
 // Returns the decoded and boxed value, or nil if the key was not present.
+//
 - (id)decodeValueForKey:(NSString *)key withCoder:(NSCoder *)coder modelVersion:(NSUInteger)modelVersion;
 
 // The version of this MTLModel subclass.

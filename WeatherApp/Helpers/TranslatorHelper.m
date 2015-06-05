@@ -36,7 +36,7 @@
     NSParameterAssert(className != nil);
     if ([JSON isKindOfClass:[NSArray class]]) {
         
-        //把解析后的数据格式和JSON文件绑定起来（）
+        //把解析后的数据格式和JSON文件绑定起来
         NSValueTransformer *valueTransformer = [MTLValueTransformer mtl_JSONArrayTransformerWithModelClass:NSClassFromString(className)];
         NSArray *collection = [valueTransformer transformedValue:JSON];
         return collection;

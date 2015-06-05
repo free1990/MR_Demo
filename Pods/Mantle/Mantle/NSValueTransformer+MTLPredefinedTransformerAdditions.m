@@ -43,17 +43,24 @@ NSString * const MTLBooleanValueTransformerName = @"MTLBooleanValueTransformerNa
 }
 
 #pragma mark Customizable Transformers
-
+//返回一个绑定格式
 + (NSValueTransformer *)mtl_JSONDictionaryTransformerWithModelClass:(Class)modelClass {
+    
+    //判断是否是MTLModel的子类并且遵守了MTLJSONSerializing协议
 	NSParameterAssert([modelClass isSubclassOfClass:MTLModel.class]);
 	NSParameterAssert([modelClass conformsToProtocol:@protocol(MTLJSONSerializing)]);
-
+    
+    //reversible 可逆的
+    //返回block处理后的NSValueTransformer
+    //这个两个block一个作为转发对象一个作为逆转对象
 	return [MTLValueTransformer
 		reversibleTransformerWithForwardBlock:^ id (id JSONDictionary) {
 			if (JSONDictionary == nil) return nil;
-
+            
+            //如果类型不是字典就报异常
 			NSAssert([JSONDictionary isKindOfClass:NSDictionary.class], @"Expected a dictionary, got: %@", JSONDictionary);
-
+            
+            //此处作为这个NSValueTransformer的对象实例
 			return [MTLJSONAdapter modelOfClass:modelClass fromJSONDictionary:JSONDictionary error:NULL];
 		}
 		reverseBlock:^ id (id model) {
@@ -67,8 +74,12 @@ NSString * const MTLBooleanValueTransformerName = @"MTLBooleanValueTransformerNa
 }
 
 + (NSValueTransformer *)mtl_JSONArrayTransformerWithModelClass:(Class)modelClass {
+    //把对象处理的过程，分解为具体对象处理，以及数组对象的处理，达到隔离的目标
+    
+    //创建转换对象(第一次)
 	NSValueTransformer *dictionaryTransformer = [self mtl_JSONDictionaryTransformerWithModelClass:modelClass];
 
+    //返回第二次
 	return [MTLValueTransformer
 		reversibleTransformerWithForwardBlock:^ id (NSArray *dictionaries) {
 			if (dictionaries == nil) return nil;
@@ -77,19 +88,22 @@ NSString * const MTLBooleanValueTransformerName = @"MTLBooleanValueTransformerNa
 
 			NSMutableArray *models = [NSMutableArray arrayWithCapacity:dictionaries.count];
 			for (id JSONDictionary in dictionaries) {
+                
+                //如果出现NSNull对象，就直接添加到返回的对象数组中去
 				if (JSONDictionary == NSNull.null) {
 					[models addObject:NSNull.null];
 					continue;
 				}
-
+                
 				NSAssert([JSONDictionary isKindOfClass:NSDictionary.class], @"Expected a dictionary or an NSNull, got: %@", JSONDictionary);
-
+                
+                //使用之前dictionaryTransformer的回调函数来决定值
 				id model = [dictionaryTransformer transformedValue:JSONDictionary];
 				if (model == nil) continue;
-
+                
 				[models addObject:model];
 			}
-
+            
 			return models;
 		}
 		reverseBlock:^ id (NSArray *models) {
@@ -99,6 +113,7 @@ NSString * const MTLBooleanValueTransformerName = @"MTLBooleanValueTransformerNa
 
 			NSMutableArray *dictionaries = [NSMutableArray arrayWithCapacity:models.count];
 			for (id model in models) {
+                //逆转为空则直接判断
 				if (model == NSNull.null) {
 					[dictionaries addObject:NSNull.null];
 					continue;

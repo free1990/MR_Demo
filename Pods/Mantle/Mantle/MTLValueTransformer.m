@@ -40,10 +40,10 @@
 
 - (id)initWithForwardBlock:(MTLValueTransformerBlock)forwardBlock reverseBlock:(MTLValueTransformerBlock)reverseBlock {
 	NSParameterAssert(forwardBlock != nil);
-
+    
 	self = [super init];
 	if (self == nil) return nil;
-
+    
 	_forwardBlock = [forwardBlock copy];
 	_reverseBlock = [reverseBlock copy];
 
@@ -52,14 +52,17 @@
 
 #pragma mark NSValueTransformer
 
+//是否允许这个变量逆转
 + (BOOL)allowsReverseTransformation {
 	return NO;
 }
 
+//被转换成的类的类型（子类需要在合适的时机进行返回）
 + (Class)transformedValueClass {
 	return [NSObject class];
 }
 
+//返回用来转换的类的对象
 - (id)transformedValue:(id)value {
 	return self.forwardBlock(value);
 }
@@ -70,6 +73,7 @@
 
 #pragma mark Lifecycle
 
+//???:子类要重写父类的初始化方法（为什么父类不支持逆转，而在子类中支持逆转呢）
 - (id)initWithForwardBlock:(MTLValueTransformerBlock)forwardBlock reverseBlock:(MTLValueTransformerBlock)reverseBlock {
 	NSParameterAssert(reverseBlock != nil);
 	return [super initWithForwardBlock:forwardBlock reverseBlock:reverseBlock];

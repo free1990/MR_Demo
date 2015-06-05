@@ -9,33 +9,58 @@
 
 #import "EXTRuntimeExtensions.h"
 
+//自定义mtl_propertyAttributes来代表成员变量的各种属性
 mtl_propertyAttributes *mtl_copyPropertyAttributes (objc_property_t property) {
+    
+    //传入属性，然后开始做各种处理
+    
+//    attrString = T@"NSString",R,C,N,V_countryName
+//    typeString = @"NSString",R,C,N,V_countryName
+//    next = ,R,C,N,V_countryName
+//    typeLength = 11
+    
+    //property的Attribute的字符串
     const char * const attrString = property_getAttributes(property);
+    
+    NSLog(@"attrString = %s", attrString);
+    
+    //为空，返回异常
     if (!attrString) {
         fprintf(stderr, "ERROR: Could not get attribute string from property %s\n", property_getName(property));
         return NULL;
     }
-
+    
     if (attrString[0] != 'T') {
         fprintf(stderr, "ERROR: Expected attribute string \"%s\" for property %s to start with 'T'\n", attrString, property_getName(property));
         return NULL;
     }
 
     const char *typeString = attrString + 1;
+    
+    NSLog(@"typeString = %s", typeString);
+    //返回位移指定字符转的
     const char *next = NSGetSizeAndAlignment(typeString, NULL, NULL);
+
+     NSLog(@"next = %s", next);
+    
     if (!next) {
         fprintf(stderr, "ERROR: Could not read past type in attribute string \"%s\" for property %s\n", attrString, property_getName(property));
         return NULL;
     }
 
     size_t typeLength = next - typeString;
+    
+    NSLog(@"typeLength = %zu", typeLength);
+    
     if (!typeLength) {
         fprintf(stderr, "ERROR: Invalid type in attribute string \"%s\" for property %s\n", attrString, property_getName(property));
         return NULL;
     }
-
+    
+    // 生成了一个属性的结构体
     // allocate enough space for the structure and the type string (plus a NUL)
     mtl_propertyAttributes *attributes = calloc(1, sizeof(mtl_propertyAttributes) + typeLength + 1);
+    
     if (!attributes) {
         fprintf(stderr, "ERROR: Could not allocate mtl_propertyAttributes structure for attribute string \"%s\" for property %s\n", attrString, property_getName(property));
         return NULL;
@@ -50,7 +75,7 @@ mtl_propertyAttributes *mtl_copyPropertyAttributes (objc_property_t property) {
         // we should be able to extract a class name
         const char *className = typeString + 2;
         next = strchr(className, '"');
-
+        
         if (!next) {
             fprintf(stderr, "ERROR: Could not read class name in attribute string \"%s\" for property %s\n", attrString, property_getName(property));
             return NULL;
@@ -200,6 +225,22 @@ mtl_propertyAttributes *mtl_copyPropertyAttributes (objc_property_t property) {
 
         attributes->setter = sel_registerName(setterName);
     }
+    
+//    BOOL readonly;
+//    BOOL nonatomic;
+//    
+//    BOOL weak;
+//    BOOL canBeCollected;
+//    BOOL dynamic;
+//    mtl_propertyMemoryManagementPolicy memoryManagementPolicy;
+//    SEL getter;
+//    SEL setter;
+//    const char *ivar;
+//    Class objectClass;
+//    char type[];
+    
+    //GDB 调试: print *attributes
+    
 
     return attributes;
 
