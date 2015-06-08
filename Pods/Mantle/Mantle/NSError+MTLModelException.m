@@ -21,6 +21,7 @@ static NSString * const MTLModelThrownExceptionErrorKey = @"MTLModelThrownExcept
 
 @implementation NSError (MTLModelException)
 
+// 封装model异常的类
 + (instancetype)mtl_modelErrorWithException:(NSException *)exception {
 	NSParameterAssert(exception != nil);
 

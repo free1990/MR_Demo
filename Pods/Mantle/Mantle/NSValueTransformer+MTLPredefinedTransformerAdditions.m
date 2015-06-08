@@ -78,7 +78,7 @@ NSString * const MTLBooleanValueTransformerName = @"MTLBooleanValueTransformerNa
     
     //创建转换对象(第一次)
 	NSValueTransformer *dictionaryTransformer = [self mtl_JSONDictionaryTransformerWithModelClass:modelClass];
-
+    
     //返回第二次
 	return [MTLValueTransformer
 		reversibleTransformerWithForwardBlock:^ id (NSArray *dictionaries) {
@@ -134,7 +134,7 @@ NSString * const MTLBooleanValueTransformerName = @"MTLBooleanValueTransformerNa
 + (NSValueTransformer *)mtl_valueMappingTransformerWithDictionary:(NSDictionary *)dictionary {
 	NSParameterAssert(dictionary != nil);
 	NSParameterAssert(dictionary.count == [[NSSet setWithArray:dictionary.allValues] count]);
-
+    
 	return [MTLValueTransformer reversibleTransformerWithForwardBlock:^(id<NSCopying> key) {
 		return dictionary[key];
 	} reverseBlock:^(id object) {

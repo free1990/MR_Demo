@@ -20,6 +20,8 @@ static void *MTLModelCachedAllowedClassesKey = &MTLModelCachedAllowedClassesKey;
 
 // Returns whether the given NSCoder requires secure coding.
 static BOOL coderRequiresSecureCoding(NSCoder *coder) {
+    
+    //requiresSecureCoding 是NSCoding的属性
 	SEL requiresSecureCodingSelector = @selector(requiresSecureCoding);
 
 	// Only invoke the method if it's implemented (i.e., only on OS X 10.8+ and
@@ -79,7 +81,7 @@ static void verifyAllowedClassesByPropertyKey(Class modelClass) {
 		MTLModelEncodingBehavior behavior = (attributes->weak ? MTLModelEncodingBehaviorConditional : MTLModelEncodingBehaviorUnconditional);
 		behaviors[key] = @(behavior);
 	}
-
+    
 	return behaviors;
 }
 
@@ -135,7 +137,7 @@ static void verifyAllowedClassesByPropertyKey(Class modelClass) {
 		[invocation setArgument:&coder atIndex:2];
 		[invocation setArgument:&modelVersion atIndex:3];
 		[invocation invoke];
-
+        
 		__unsafe_unretained id result = nil;
 		[invocation getReturnValue:&result];
 		return result;
@@ -187,17 +189,17 @@ static void verifyAllowedClassesByPropertyKey(Class modelClass) {
 			return self;
 		}
 	}
-
+    
 	NSSet *propertyKeys = self.class.propertyKeys;
 	NSMutableDictionary *dictionaryValue = [[NSMutableDictionary alloc] initWithCapacity:propertyKeys.count];
-
+    
 	for (NSString *key in propertyKeys) {
 		id value = [self decodeValueForKey:key withCoder:coder modelVersion:version.unsignedIntegerValue];
 		if (value == nil) continue;
 
 		dictionaryValue[key] = value;
 	}
-
+    
 	NSError *error = nil;
 	self = [self initWithDictionary:dictionaryValue error:&error];
 	if (self == nil) NSLog(@"*** Could not unarchive %@: %@", self.class, error);

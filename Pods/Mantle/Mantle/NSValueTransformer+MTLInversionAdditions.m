@@ -11,6 +11,7 @@
 
 @implementation NSValueTransformer (MTLInversionAdditions)
 
+// 逆转ForwardBlock和everseBlock方法
 - (NSValueTransformer *)mtl_invertedTransformer {
 	NSParameterAssert(self.class.allowsReverseTransformation);
 

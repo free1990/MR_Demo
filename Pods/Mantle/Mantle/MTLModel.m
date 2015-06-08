@@ -92,6 +92,7 @@ static BOOL MTLValidateAndSetValue(id obj, NSString *key, id value, BOOL forceUp
 	return [super init];
 }
 
+// 通过字典来生成MTLModel的的实例
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary error:(NSError **)error {
 	self = [self init];
 	if (self == nil) return nil;
@@ -174,6 +175,7 @@ static BOOL MTLValidateAndSetValue(id obj, NSString *key, id value, BOOL forceUp
 	return keys;
 }
 
+// 获得找个MTLModel的实例的key的集合
 - (NSDictionary *)dictionaryValue {
 	return [self dictionaryWithValuesForKeys:self.class.propertyKeys.allObjects];
 }

@@ -78,7 +78,8 @@ static NSString * const MTLJSONAdapterThrownExceptionErrorKey = @"MTLJSONAdapter
 	if (JSONDictionary == nil) return nil;
     
     NSLog(@"modelClass = %@",  modelClass);
-	if ([modelClass respondsToSelector:@selector(classForParsingJSONDictionary:)]) {
+	// 如果类实现了classForParsingJSONDictionary找个方法，那么就去调用，返回一个新的class的实例，并且去对找个对象进行验证
+    if ([modelClass respondsToSelector:@selector(classForParsingJSONDictionary:)]) {
         
 		modelClass = [modelClass classForParsingJSONDictionary:JSONDictionary];
 		if (modelClass == nil) {
@@ -117,13 +118,17 @@ static NSString * const MTLJSONAdapterThrownExceptionErrorKey = @"MTLJSONAdapter
 	for (NSString *propertyKey in [self.modelClass propertyKeys]) {
 		NSString *JSONKeyPath = [self JSONKeyPathForKey:propertyKey];
 		if (JSONKeyPath == nil) continue;
-
+        
 		id value = [JSONDictionary valueForKeyPath:JSONKeyPath];
 		if (value == nil) continue;
-
+        
 		@try {
+            
+            // 获取每个key的NSValueTransformer数据
 			NSValueTransformer *transformer = [self JSONTransformerForKey:propertyKey];
-			if (transformer != nil) {
+			
+            //如果为真name就说明存在自己处理的NSValueTransformer，则改变上面的value的值
+            if (transformer != nil) {
 				// Map NSNull -> nil for the transformer, and then back for the
 				// dictionary we're going to insert into.
 				if ([value isEqual:NSNull.null]) value = nil;
@@ -153,6 +158,7 @@ static NSString * const MTLJSONAdapterThrownExceptionErrorKey = @"MTLJSONAdapter
 		}
 	}
 
+    // 通过把属性和值对应起来生成新的实例
 	_model = [self.modelClass modelWithDictionary:dictionaryValue error:error];
     
 	if (_model == nil) return nil;
@@ -175,6 +181,7 @@ static NSString * const MTLJSONAdapterThrownExceptionErrorKey = @"MTLJSONAdapter
 
 #pragma mark Serialization
 
+// 把model的数据转化成字典类型
 - (NSDictionary *)JSONDictionary {
 	NSDictionary *dictionaryValue = self.model.dictionaryValue;
 	NSMutableDictionary *JSONDictionary = [[NSMutableDictionary alloc] initWithCapacity:dictionaryValue.count];
@@ -214,8 +221,17 @@ static NSString * const MTLJSONAdapterThrownExceptionErrorKey = @"MTLJSONAdapter
 - (NSValueTransformer *)JSONTransformerForKey:(NSString *)key {
 	NSParameterAssert(key != nil);
 
+    //此处构造特殊的key+JSONTransformer的方法
 	SEL selector = MTLSelectorWithKeyPattern(key, "JSONTransformer");
+    
+    // 如果响应了特殊处理的方法
 	if ([self.modelClass respondsToSelector:selector]) {
+        
+        // 由于是类方法，会提前注册在class的methodlist里面,所以此时是响应的
+        // 由于没有办法去使用方法的名字,比如：[NSString init];
+        // 所以此时使用NSInvocation的方法去调用
+        
+        // 调用类的方法
 		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[self.modelClass methodSignatureForSelector:selector]];
 		invocation.target = self.modelClass;
 		invocation.selector = selector;
@@ -226,7 +242,10 @@ static NSString * const MTLJSONAdapterThrownExceptionErrorKey = @"MTLJSONAdapter
 		return result;
 	}
 
+    //协议的方法，进行处理
 	if ([self.modelClass respondsToSelector:@selector(JSONTransformerForKey:)]) {
+        
+        NSLog(@"self.modelClass = %@", self.modelClass);
 		return [self.modelClass JSONTransformerForKey:key];
 	}
 

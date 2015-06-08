@@ -43,6 +43,7 @@
 //
 // Returns a value transformer, or nil if no transformation should be performed.
 
+// 方法的名字里面是+<key>JSONTransformer这种样式来处理特殊的数据格式
 // 返回key指定值的的数据，如果transformer存在数据可逆，那么还可以属性的值转换成JSON
 // 如果接受者实现了+<key>JSONTransformer的方法，MTLJSONAdapter会使用这个方法来代替JSONTransformerForKey
 // 获得transformer，这个数据如果是空，俺么就会是一个nil

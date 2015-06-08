@@ -12,6 +12,7 @@
 
 // The first object in the array or nil if the array is empty.
 // Forwards to `firstObject` which has been first declared in iOS7, but works with iOS4/10.6.
+// 提供首个对象
 @property (nonatomic, readonly, strong) id mtl_firstObject;
 
 // Returns a new array without all instances of the given object.

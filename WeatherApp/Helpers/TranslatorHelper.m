@@ -11,6 +11,9 @@
 
 @implementation TranslatorHelper
 
+// 辅助类用来提供方便的接口用来处理数据
+
+//直接转换成对象
 - (id)translateModelFromJSON:(NSDictionary *)JSON
                 withclassName:(NSString *)className
 {
@@ -34,10 +37,13 @@
                     withClassName:(NSString *)className
 {
     NSParameterAssert(className != nil);
+    
     if ([JSON isKindOfClass:[NSArray class]]) {
         
         //把解析后的数据格式和JSON文件绑定起来
         NSValueTransformer *valueTransformer = [MTLValueTransformer mtl_JSONArrayTransformerWithModelClass:NSClassFromString(className)];
+        
+        //透过里面的玩法，其实相当于通过block的延迟执行，把这个值返回出来，此时的值已经是正常可以去使用的对象的集合了
         NSArray *collection = [valueTransformer transformedValue:JSON];
         return collection;
     }

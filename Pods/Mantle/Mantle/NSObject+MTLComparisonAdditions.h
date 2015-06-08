@@ -12,4 +12,5 @@
 #import <Foundation/Foundation.h>
 
 // Returns whether both objects are identical or equal via -isEqual:
+// 给Object添加对象是否相等的帮助方法
 BOOL MTLEqualObjects(id obj1, id obj2);

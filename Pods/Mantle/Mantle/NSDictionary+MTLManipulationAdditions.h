@@ -16,10 +16,12 @@
 //
 // Returns a new dictionary containing the entries of the receiver combined with
 // those of `dictionary`.
+// 把一个字典里面的所有的键值对都已经移动到另外的一个字典里面
 - (NSDictionary *)mtl_dictionaryByAddingEntriesFromDictionary:(NSDictionary *)dictionary;
 
 // Creates a new dictionary with all the entries for the given keys removed from
 // the receiver.
+// 删除指定的keys
 - (NSDictionary *)mtl_dictionaryByRemovingEntriesWithKeys:(NSSet *)keys;
 
 @end

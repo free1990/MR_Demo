@@ -22,6 +22,8 @@
 }
 
 - (instancetype)mtl_arrayByRemovingObject:(id)object {
+    
+    //通过拷贝来实现对象的赋值
 	NSMutableArray *result = [self mutableCopy];
 	[result removeObject:object];
 	return result;

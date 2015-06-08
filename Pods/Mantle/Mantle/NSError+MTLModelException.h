@@ -18,6 +18,7 @@
 //
 // Returns an error that takes its localized description and failure reason
 // from the exception.
+// model错误抛出的异常
 + (instancetype)mtl_modelErrorWithException:(NSException *)exception;
 
 @end

@@ -19,6 +19,8 @@
 // deserializes from.
 //
 // This method must not return nil.
+
+//
 + (NSString *)managedObjectEntityName;
 
 // Specifies how to map property keys to different keys on the receiver's

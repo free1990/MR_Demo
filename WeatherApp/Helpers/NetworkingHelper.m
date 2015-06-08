@@ -106,6 +106,8 @@
         if (!completion) {
             return;
         }
+        
+        // 此处存在的[responseObject objectForKey:@"geonames"]这个是一个id类型
         NSArray *collection = [[self translatorHelper] translateCollectionFromJSON:[responseObject objectForKey:@"geonames"]
                                                                      withClassName:@"City"];
         completion(collection, nil);

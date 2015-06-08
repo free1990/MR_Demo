@@ -9,6 +9,8 @@
 #import "MTLReflection.h"
 #import <objc/runtime.h>
 
+// 生成合理的方法的名字
+
 SEL MTLSelectorWithKeyPattern(NSString *key, const char *suffix) {
 	NSUInteger keyLength = [key maximumLengthOfBytesUsingEncoding:NSUTF8StringEncoding];
 	NSUInteger suffixLength = strlen(suffix);
