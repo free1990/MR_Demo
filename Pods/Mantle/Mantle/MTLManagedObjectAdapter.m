@@ -149,7 +149,7 @@ static const NSInteger MTLManagedObjectAdapterErrorExceptionThrown = 1;
 		// double-free or leak the old or new values).
 		__autoreleasing id replaceableValue = value;
 		if (![model validateValue:&replaceableValue forKey:key error:error]) return NO;
-
+        
 		[model setValue:replaceableValue forKey:key];
 		return YES;
 	};
@@ -186,7 +186,7 @@ static const NSInteger MTLManagedObjectAdapterErrorExceptionThrown = 1;
 						
 						[models addObject:model];
 					}
-
+                    
 					return models;
 				});
 

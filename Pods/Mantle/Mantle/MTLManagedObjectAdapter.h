@@ -13,6 +13,8 @@
 // A MTLModel object that supports being serialized to and from Core Data as an
 // NSManagedObject.
 @protocol MTLManagedObjectSerializing
+
+// 协议的方法
 @required
 
 // The name of the Core Data entity that the receiver serializes to and
@@ -20,7 +22,7 @@
 //
 // This method must not return nil.
 
-//
+// 提供表名字
 + (NSString *)managedObjectEntityName;
 
 // Specifies how to map property keys to different keys on the receiver's
@@ -40,6 +42,8 @@
 //
 // Returns a dictionary mapping property keys to entity keys (as strings) or
 // NSNull values.
+
+// 提供json的键值，用来表示manageedObject的数据结构
 + (NSDictionary *)managedObjectKeysByPropertyKey;
 
 @optional
