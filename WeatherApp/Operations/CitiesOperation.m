@@ -67,10 +67,8 @@
         
         if (self.isCancelled)
             return;
-        CountryManagedObject *countryManagedObject = [[self databaseHelper] getCountryManagedObjectWithCountryCode:
-                                                      _country.countryCode
-                                                                                                         inContext:
-                                                      [NSManagedObjectContext MR_contextForCurrentThread]];
+        CountryManagedObject *countryManagedObject = [[self databaseHelper] getCountryManagedObjectWithCountryCode:_country.countryCode
+                                                                                                         inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
         if (self.isCancelled)
             return;
         NSArray *array = [CityManagedObject MR_findAllWithPredicate:

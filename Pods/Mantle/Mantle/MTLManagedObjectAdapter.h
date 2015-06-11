@@ -6,6 +6,8 @@
 //  Copyright (c) 2013 GitHub. All rights reserved.
 //
 
+// FIXME:没搞懂，暂时跳过
+
 #import <CoreData/CoreData.h>
 
 @class MTLModel;

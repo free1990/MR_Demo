@@ -45,6 +45,7 @@ static const int ddLogLevel = LOG_LEVEL_DEBUG;
 
 #pragma mark - Public Methods
 
+// 获取NSManagedObjectContext里面指定countryCode的CountryManagedObject
 - (CountryManagedObject *)getCountryManagedObjectWithCountryCode:(NSString *)countryCode
                                                        inContext:(NSManagedObjectContext *)context
 {
@@ -53,6 +54,7 @@ static const int ddLogLevel = LOG_LEVEL_DEBUG;
                                                inContext:context];
 }
 
+// 同上
 - (CityManagedObject *)getCityManagedObjectWithName:(NSString *)name
                                              inContext:(NSManagedObjectContext *)context
 {
@@ -63,6 +65,7 @@ static const int ddLogLevel = LOG_LEVEL_DEBUG;
 
 #pragma mark - Private Methods
 
+// 生成NSFetchRequest
 - (NSFetchRequest *)backgroundFetchRequestForEntityName:(NSString *)entityName
                                   withSortDescriptorKey:(NSString *)sortDescriptorKey
                                               ascending:(BOOL)ascending
@@ -92,6 +95,7 @@ static const int ddLogLevel = LOG_LEVEL_DEBUG;
     [context executeFetchRequest:fetchRequest
                       completion:^(NSArray *array, NSError *error) {
                           if (array) {
+                              //
                               completion([[self translatorHelper] translateCollectionfromManagedObjects:array
                                                                                           withClassName:@"Country"], nil);
                           }
@@ -108,6 +112,8 @@ static const int ddLogLevel = LOG_LEVEL_DEBUG;
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
         [countries enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             NSError *error;
+            
+            // 为什么此处要使用找个方法来进行存储呢，不适用MR的方法进行存储。偏偏
             [MTLManagedObjectAdapter managedObjectFromModel:obj
                                        insertingIntoContext:localContext
                                                       error:&error];
@@ -147,7 +153,7 @@ static const int ddLogLevel = LOG_LEVEL_DEBUG;
 }
 
 #pragma mark - CitiesStorage Protocol
-
+// 存储cities信息
 - (void)storeCities:(NSArray *)cities
         fromCountry:(Country *)country
 {
@@ -159,6 +165,8 @@ static const int ddLogLevel = LOG_LEVEL_DEBUG;
             CityManagedObject *cityManagedObject = [MTLManagedObjectAdapter managedObjectFromModel:obj
                                                                               insertingIntoContext:localContext
                                                                                              error:&error];
+            
+            // ???:这他妈的为什么要这样搞
             [cityManagedObject setCountry:countryManagedObject];
             [countryManagedObject addCitiesObject:cityManagedObject];
         }];

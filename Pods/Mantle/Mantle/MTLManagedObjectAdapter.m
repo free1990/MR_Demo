@@ -273,7 +273,7 @@ static const NSInteger MTLManagedObjectAdapterErrorExceptionThrown = 1;
 	if (existingModel != NULL) {
 		return (__bridge id)existingModel;
 	}
-
+    
 	if ([modelClass respondsToSelector:@selector(classForDeserializingManagedObject:)]) {
 		modelClass = [modelClass classForDeserializingManagedObject:managedObject];
 		if (modelClass == nil) {
@@ -295,7 +295,8 @@ static const NSInteger MTLManagedObjectAdapterErrorExceptionThrown = 1;
 }
 
 - (id)managedObjectFromModel:(MTLModel<MTLManagedObjectSerializing> *)model insertingIntoContext:(NSManagedObjectContext *)context processedObjects:(CFMutableDictionaryRef)processedObjects error:(NSError **)error {
-	NSParameterAssert(model != nil);
+	
+    NSParameterAssert(model != nil);
 	NSParameterAssert(context != nil);
 	NSParameterAssert(processedObjects != nil);
 
@@ -307,14 +308,17 @@ static const NSInteger MTLManagedObjectAdapterErrorExceptionThrown = 1;
 
 	Class fetchRequestClass = NSClassFromString(@"NSFetchRequest");
 	NSAssert(fetchRequestClass != nil, @"CoreData.framework must be linked to use MTLManagedObjectAdapter");
-
+    
+    
 	// If a uniquing predicate is provided, perform a fetch request to guarentee a unique managed object.
 	__block NSManagedObject *managedObject = nil;
+    // 生成谓词的结构
 	NSPredicate *uniquingPredicate = [self uniquingPredicateForModel:model];
-
+    
 	if (uniquingPredicate != nil) {
 		__block NSError *fetchRequestError = nil;
 		__block BOOL encountedError = NO;
+        
 		managedObject = performInContext(context, ^ id {
 			NSFetchRequest *fetchRequest = [[fetchRequestClass alloc] init];
 			fetchRequest.entity = [entityDescriptionClass entityForName:entityName inManagedObjectContext:context];

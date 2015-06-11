@@ -164,7 +164,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     //先到缓存中去寻找数据
     [[self cacheHelper] getCountriesWithCompletion:^(NSArray *array, NSError *error) {
         
-        
         if (array) {
             DDLogInfo(@"Contries retrieved from memory");
             completion(array, nil);
@@ -194,8 +193,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
                 }
             }];
         }
-        
-        
         
     }];
 }

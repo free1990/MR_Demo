@@ -50,7 +50,7 @@
     return nil;
 }
 
-//???:不知道咋么玩
+//???:把存入Model的managedObject的
 - (id)translateModelfromManagedObject:(NSManagedObject *)managedObject
                         withClassName:(NSString *)className
 {
