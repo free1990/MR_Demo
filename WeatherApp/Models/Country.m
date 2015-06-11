@@ -25,7 +25,6 @@
              @"countryName" : @"countryName",
              @"countryCode" : @"countryCode"
             };
-    
 }
 
 

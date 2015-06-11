@@ -1,0 +1,20 @@
+ [{
+  "name" : "Safari",
+  "key" : "safari",
+  "app_url_scheme" : "http://www.twitter.com",
+  "actions" :
+  [{
+   "key" : "show_profile",
+   "url_format" : "http://www.twitter.com/"
+   }]
+  },
+  {
+  "name" : "Twitter",
+  "key" : "twitter",
+  "app_url_scheme" : "twitter:",
+  "actions" :
+  [{
+   "key" : "show_profile",
+   "url_format" : "twitter://user?screen_name="
+   }]
+  }]

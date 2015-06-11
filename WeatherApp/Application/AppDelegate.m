@@ -12,6 +12,10 @@
 #import <CocoaLumberjack/DDASLLogger.h>
 #import "CacheHelper.h"
 #import "AppDelegate.h"
+#import "MTLJSONAdapter.h"
+#import "MTLValueTransformer.h"
+#import "NSValueTransformer+MTLPredefinedTransformerAdditions.h"
+#import "ChoosyAppInfo.h"
 
 @implementation AppDelegate
 {
@@ -22,6 +26,9 @@
 -           (BOOL)application:(UIApplication *)application
 didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
+    [self testMantleFunc];
+    
     [[UIApplication sharedApplication] setApplicationSupportsShakeToEdit:YES];
     
     //设置最大cost是MEMORY_CACHE_COST_LIMIT
@@ -47,6 +54,34 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 // FIXME:12312312312312
 // ???:TEST ???
 // !!!:TEST !!!
+
+- (void)testMantleFunc
+{
+    NSLog(@"测试Mantle");
+    
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"data" ofType:@"json"];
+    NSData *data = [NSData dataWithContentsOfFile:filePath];
+    
+    NSError *error = nil;
+   id array = [NSJSONSerialization JSONObjectWithData:data
+                                              options:NSJSONReadingAllowFragments
+                                                error:&error];
+    
+    NSValueTransformer *valueTransformer = [MTLValueTransformer mtl_JSONArrayTransformerWithModelClass:[ChoosyAppInfo class]];
+    
+    //透过里面的玩法，其实相当于通过block的延迟执行，把这个值返回出来，此时的值已经是正常可以去使用的对象的集合了
+    NSArray *collection = [valueTransformer transformedValue:array];
+
+    
+    for ( int i = 0; i < [collection count]; i++ ) {
+        
+        ChoosyAppInfo *appInfo = [collection objectAtIndex:i];
+        
+        NSLog(@"appinfo name = %@ app action count = %ld appURLScheme = %@", appInfo.appName, [appInfo.appActions count], appInfo.appURLScheme);
+    }
+    
+    
+}
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {

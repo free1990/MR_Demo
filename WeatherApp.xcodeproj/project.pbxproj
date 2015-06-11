@@ -44,6 +44,9 @@
 		3FF5DE9E188EDD05004F275D /* CityManagedObject+Fixes.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FF5DE9D188EDD05004F275D /* CityManagedObject+Fixes.m */; };
 		3FF5DEA1188EF119004F275D /* StationsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FF5DEA0188EF119004F275D /* StationsViewController.m */; };
 		3FF5DEA4188EF917004F275D /* StationOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FF5DEA3188EF917004F275D /* StationOperation.m */; };
+		D64513D31B298B0E00C367BD /* ChoosyAppInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = D64513D21B298B0D00C367BD /* ChoosyAppInfo.m */; };
+		D64513D61B298B7700C367BD /* ChoosyAppAction.m in Sources */ = {isa = PBXBuildFile; fileRef = D64513D51B298B7700C367BD /* ChoosyAppAction.m */; };
+		D64513D81B298C8900C367BD /* data.json in Resources */ = {isa = PBXBuildFile; fileRef = D64513D71B298C8900C367BD /* data.json */; };
 		E56CA4BD26154E279309C175 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CE92C69A36A446797C4099F /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -132,6 +135,11 @@
 		4CE92C69A36A446797C4099F /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		75D8657B85BE573BAC48336E /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		84D8E8E9F4BAC1FA2FC234E7 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		D64513D11B298B0D00C367BD /* ChoosyAppInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChoosyAppInfo.h; path = Models/ChoosyAppInfo.h; sourceTree = "<group>"; };
+		D64513D21B298B0D00C367BD /* ChoosyAppInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChoosyAppInfo.m; path = Models/ChoosyAppInfo.m; sourceTree = "<group>"; };
+		D64513D41B298B7700C367BD /* ChoosyAppAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChoosyAppAction.h; path = Models/ChoosyAppAction.h; sourceTree = "<group>"; };
+		D64513D51B298B7700C367BD /* ChoosyAppAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChoosyAppAction.m; path = Models/ChoosyAppAction.m; sourceTree = "<group>"; };
+		D64513D71B298C8900C367BD /* data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = data.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -279,6 +287,11 @@
 		3FE685021885996C00AEA2CD /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				D64513D11B298B0D00C367BD /* ChoosyAppInfo.h */,
+				D64513D21B298B0D00C367BD /* ChoosyAppInfo.m */,
+				D64513D41B298B7700C367BD /* ChoosyAppAction.h */,
+				D64513D51B298B7700C367BD /* ChoosyAppAction.m */,
+				D64513D71B298C8900C367BD /* data.json */,
 				3FE685221885C64200AEA2CD /* Country.h */,
 				3FE685231885C64200AEA2CD /* Country.m */,
 				3FC1CB07188800EE00845D9C /* City.h */,
@@ -463,6 +476,7 @@
 				3FE6850618859A3800AEA2CD /* MainStoryboard.storyboard in Resources */,
 				3FC6F7791885945B009D48CB /* Images.xcassets in Resources */,
 				3FC6F77E18859495009D48CB /* InfoPlist.strings in Resources */,
+				D64513D81B298C8900C367BD /* data.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -522,9 +536,11 @@
 				3F294ED8188984910013C51D /* CitiesOperation.m in Sources */,
 				3FF5DE9E188EDD05004F275D /* CityManagedObject+Fixes.m in Sources */,
 				3FDA2BE71886CFCF001790F8 /* Models.xcdatamodeld in Sources */,
+				D64513D31B298B0E00C367BD /* ChoosyAppInfo.m in Sources */,
 				3FE685241885C64200AEA2CD /* Country.m in Sources */,
 				3FF5DEA4188EF917004F275D /* StationOperation.m in Sources */,
 				3FDA2BF11886E301001790F8 /* DatabaseHelper.m in Sources */,
+				D64513D61B298B7700C367BD /* ChoosyAppAction.m in Sources */,
 				3FF5DE96188EDA57004F275D /* StationManagedObject.m in Sources */,
 				3F21106218884E1C00CE428E /* Station.m in Sources */,
 				3FC1CB09188800EE00845D9C /* City.m in Sources */,
