@@ -16,7 +16,7 @@
 @required
 
 /// Specifies how to map property keys to different key paths in JSON.
-///
+/// 如果子类重写这个方法，就需要把父类的property key重写添加一遍
 /// Subclasses overriding this method should combine their values with those of
 /// `super`.
 ///

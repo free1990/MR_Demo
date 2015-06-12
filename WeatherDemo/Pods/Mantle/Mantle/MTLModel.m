@@ -133,7 +133,9 @@ static BOOL MTLValidateAndSetValue(id obj, NSString *key, id value, BOOL forceUp
         //???:@onExit
 		@onExit {
 			free(properties);
+            printf("free");
 		};
+        
 
 		for (unsigned i = 0; i < count; i++) {
 			block(properties[i], &stop);

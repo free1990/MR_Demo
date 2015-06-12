@@ -160,10 +160,21 @@ static BOOL MTLValidateAndSetValue(id obj, NSString *key, id value, BOOL forceUp
 
 		cls = cls.superclass;
 		if (properties == NULL) continue;
-
+        
+        //???:技巧点，代码段执行结束的时候,不需要properties就释放这个properties
 		@onExit {
 			free(properties);
 		};
+        
+        // _attribute__可以设置函数属性（Function Attribute）、变量属性（Variable Attribute）和类型属性（Type Attribute）。
+//        @try {
+//            
+//        } @finally {
+//            
+//        }
+//        __strong mtl_cleanupBlock_t metamacro_concat(mtl_exitBlock_, __LINE__) __attribute__((cleanup(mtl_executeCleanupBlock), unused)) = ^{
+//            free(properties);
+//        };
 
 		for (unsigned i = 0; i < count; i++) {
 			block(properties[i], &stop);
@@ -173,6 +184,8 @@ static BOOL MTLValidateAndSetValue(id obj, NSString *key, id value, BOOL forceUp
 }
 
 + (NSSet *)propertyKeys {
+    
+    // 获取到找个类的所有的Property的key值
 	NSSet *cachedKeys = objc_getAssociatedObject(self, MTLModelCachedPropertyKeysKey);
 	if (cachedKeys != nil) return cachedKeys;
 
