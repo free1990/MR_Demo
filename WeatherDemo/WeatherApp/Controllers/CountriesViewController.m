@@ -97,6 +97,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     //以纳秒的精度来计算拉取国家的时间
     uint64_t startTime = mach_absolute_time();
     [[WeatherAppManager sharedManager] getCountriesWithCompletion:^(NSArray *array, NSError *error) {
+        
         uint64_t endTime = mach_absolute_time();
         uint64_t elapsedTime = endTime - startTime;
         static double ticksToNanoseconds = 0.0;
@@ -123,6 +124,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
                 });
             }
         }
+        
+        
     }];
 }
 

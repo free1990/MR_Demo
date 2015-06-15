@@ -179,8 +179,11 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
                     [[self networkingHelper] getCountriesWithCompletion:^(NSArray *array, NSError *error) {
                         if (!error) {
                             if (array) {
+                                // 排序
                                 NSArray *sortedArray = [ModelUtils sortCountries:array];
+                                // 存入缓存
                                 [[self cacheHelper] storeCountries:sortedArray];
+                                // 存入数据库
                                 [[self databaseHelper] storeCountries:sortedArray];
                                 DDLogInfo(@"Contries retrieved from network");
                                 completion(sortedArray, nil);

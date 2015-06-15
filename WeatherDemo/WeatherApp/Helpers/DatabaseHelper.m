@@ -109,6 +109,7 @@ static const int ddLogLevel = LOG_LEVEL_DEBUG;
 
 - (void)storeCountries:(NSArray *)countries
 {
+    // 存储countries的对象
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
         [countries enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             NSError *error;
@@ -133,12 +134,15 @@ static const int ddLogLevel = LOG_LEVEL_DEBUG;
 - (void)getCitiesWithCountry:(Country *)country
                   completion:(ArrayCompletionBlock)completion
 {
+    
     CountryManagedObject *countryManagedObject = [self getCountryManagedObjectWithCountryCode:country.countryCode
                                                                                     inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    
     NSFetchRequest *fetchRequest = [self backgroundFetchRequestForEntityName:@"CityManagedObject"
                                                        withSortDescriptorKey:@"name"
                                                                    ascending:YES
                                                                 andPredicate:[NSPredicate predicateWithFormat:@"country == %@", countryManagedObject]];
+    
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
     [context executeFetchRequest:fetchRequest
                       completion:^(NSArray *array, NSError *error) {
@@ -158,6 +162,7 @@ static const int ddLogLevel = LOG_LEVEL_DEBUG;
         fromCountry:(Country *)country
 {
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+        
         CountryManagedObject *countryManagedObject = [self getCountryManagedObjectWithCountryCode:country.countryCode
                                                                                         inContext:localContext];
         [cities enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
@@ -169,6 +174,7 @@ static const int ddLogLevel = LOG_LEVEL_DEBUG;
             // ???:这他妈的为什么要这样搞
             [cityManagedObject setCountry:countryManagedObject];
             [countryManagedObject addCitiesObject:cityManagedObject];
+            
         }];
     } completion:^(BOOL success, NSError *error) {
         if (success) {
