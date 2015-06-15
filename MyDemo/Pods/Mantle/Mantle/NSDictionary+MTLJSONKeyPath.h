@@ -10,6 +10,7 @@
 
 @interface NSDictionary (MTLJSONKeyPath)
 
+//  获取json指定路径的对象
 /// Looks up the value of a key path in the receiver.
 ///
 /// JSONKeyPath - The key path that should be resolved. Every element along this
@@ -21,7 +22,8 @@
 ///               resolving the value.
 ///
 /// Returns the value for the key path which may be nil. Clients should inspect
-/// the success parameter to decide how to proceed with the result.
+/// the success parameter to decide how to proceed with the result
+
 - (id)mtl_valueForJSONKeyPath:(NSString *)JSONKeyPath success:(BOOL *)success error:(NSError **)error;
 
 @end

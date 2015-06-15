@@ -15,6 +15,9 @@
 		D64513F31B2A8F8E00C367BD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D64513F21B2A8F8E00C367BD /* Images.xcassets */; };
 		D64513F61B2A8F8E00C367BD /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = D64513F41B2A8F8E00C367BD /* LaunchScreen.xib */; };
 		D64514021B2A8F8E00C367BD /* MyDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D64514011B2A8F8E00C367BD /* MyDemoTests.m */; };
+		D6FE63E91B2E7D860011BCD8 /* ChoosyAppInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = D6FE63E51B2E7D860011BCD8 /* ChoosyAppInfo.m */; };
+		D6FE63EA1B2E7D860011BCD8 /* ChoosyAppAction.m in Sources */ = {isa = PBXBuildFile; fileRef = D6FE63E71B2E7D860011BCD8 /* ChoosyAppAction.m */; };
+		D6FE63EB1B2E7D860011BCD8 /* data.json in Resources */ = {isa = PBXBuildFile; fileRef = D6FE63E81B2E7D860011BCD8 /* data.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +47,11 @@
 		D64513FB1B2A8F8E00C367BD /* MyDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D64514001B2A8F8E00C367BD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D64514011B2A8F8E00C367BD /* MyDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyDemoTests.m; sourceTree = "<group>"; };
+		D6FE63E41B2E7D860011BCD8 /* ChoosyAppInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChoosyAppInfo.h; sourceTree = "<group>"; };
+		D6FE63E51B2E7D860011BCD8 /* ChoosyAppInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChoosyAppInfo.m; sourceTree = "<group>"; };
+		D6FE63E61B2E7D860011BCD8 /* ChoosyAppAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChoosyAppAction.h; sourceTree = "<group>"; };
+		D6FE63E71B2E7D860011BCD8 /* ChoosyAppAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChoosyAppAction.m; sourceTree = "<group>"; };
+		D6FE63E81B2E7D860011BCD8 /* data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = data.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +117,7 @@
 				D64513EA1B2A8F8E00C367BD /* AppDelegate.m */,
 				D64513EC1B2A8F8E00C367BD /* ViewController.h */,
 				D64513ED1B2A8F8E00C367BD /* ViewController.m */,
+				D6FE63E31B2E7D7A0011BCD8 /* mantle */,
 				D64513EF1B2A8F8E00C367BD /* Main.storyboard */,
 				D64513F21B2A8F8E00C367BD /* Images.xcassets */,
 				D64513F41B2A8F8E00C367BD /* LaunchScreen.xib */,
@@ -141,6 +150,18 @@
 				D64514001B2A8F8E00C367BD /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D6FE63E31B2E7D7A0011BCD8 /* mantle */ = {
+			isa = PBXGroup;
+			children = (
+				D6FE63E41B2E7D860011BCD8 /* ChoosyAppInfo.h */,
+				D6FE63E51B2E7D860011BCD8 /* ChoosyAppInfo.m */,
+				D6FE63E61B2E7D860011BCD8 /* ChoosyAppAction.h */,
+				D6FE63E71B2E7D860011BCD8 /* ChoosyAppAction.m */,
+				D6FE63E81B2E7D860011BCD8 /* data.json */,
+			);
+			name = mantle;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -228,6 +249,7 @@
 				D64513F11B2A8F8E00C367BD /* Main.storyboard in Resources */,
 				D64513F61B2A8F8E00C367BD /* LaunchScreen.xib in Resources */,
 				D64513F31B2A8F8E00C367BD /* Images.xcassets in Resources */,
+				D6FE63EB1B2E7D860011BCD8 /* data.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -278,6 +300,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D6FE63E91B2E7D860011BCD8 /* ChoosyAppInfo.m in Sources */,
+				D6FE63EA1B2E7D860011BCD8 /* ChoosyAppAction.m in Sources */,
 				D64513EE1B2A8F8E00C367BD /* ViewController.m in Sources */,
 				D64513EB1B2A8F8E00C367BD /* AppDelegate.m in Sources */,
 				D64513E81B2A8F8E00C367BD /* main.m in Sources */,

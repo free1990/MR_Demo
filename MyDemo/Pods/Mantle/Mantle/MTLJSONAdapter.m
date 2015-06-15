@@ -377,6 +377,7 @@ static NSString * const MTLJSONAdapterThrownExceptionErrorKey = @"MTLJSONAdapter
 	return [model validate:error] ? model : nil;
 }
 
+// 从model转换成NSDictionary
 + (NSDictionary *)valueTransformersForModelClass:(Class)modelClass {
 	NSParameterAssert(modelClass != nil);
 	NSParameterAssert([modelClass conformsToProtocol:@protocol(MTLJSONSerializing)]);
